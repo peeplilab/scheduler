@@ -1,0 +1,847 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.hero {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(15, 23, 42, 0.92));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.topbar {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.topbar__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin: 6px 0 8px;
+}
+
+@media (min-width: 720px) {
+  .hero h1 {
+    font-size: 34px;
+  }
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  color: var(--accent);
+  margin: 0;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 13px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Keep the primary views large: stack schedule + availability */
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.input,
+select,
+button {
+  font: inherit;
+}
+
+.input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e2e8f0;
+}
+
+.input:focus-visible,
+select:focus-visible {
+  border-color: rgba(56, 189, 248, 0.55);
+}
+
+.segmented {
+  display: flex;
+  gap: 6px;
+}
+
+.chip {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.chip--active {
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.pill-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.pill--selected {
+  border-style: solid;
+  border-color: var(--accent);
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.calendar-column {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+}
+
+.calendar-column__header {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.calendar-column__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.appointment {
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-left-color: var(--border);
+}
+
+.appointment:hover {
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.appointment--conflict {
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.appointment__meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.appointment__time {
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.appointment__title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge--evaluation {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.badge--followup {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.badge--conflict {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.badge--locked {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.badge--cancelled {
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.badge--status {
+  background: rgba(56, 189, 248, 0.12);
+  color: #e0f2fe;
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.badge--status-completed {
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.badge--status-incomplete {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.pill--ghost,
+.pill--ghost:hover,
+.pill--ghost:focus {
+  background: transparent;
+  border-style: solid;
+}
+
+.pill--ghost {
+  border-color: var(--border);
+  color: #e2e8f0;
+}
+
+.reassign {
+  margin-top: 10px;
+}
+
+.reassign__row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.availability {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.availability__legend {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.legend {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.legend--available {
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #4ade80;
+}
+
+.legend--booked {
+  border-color: rgba(59, 130, 246, 0.5);
+  color: #93c5fd;
+}
+
+.legend--time-off {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+.legend--off {
+  border-color: rgba(148, 163, 184, 0.5);
+  color: #cbd5e1;
+}
+
+.availability__grid {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.availability__header,
+.availability__row {
+  display: grid;
+}
+
+.availability__cell {
+  border-bottom: 1px solid var(--border);
+  padding: 12px;
+}
+
+.availability__cell--label {
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid var(--border);
+}
+
+.availability__block-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.availability__block {
+  padding: 8px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 13px;
+  border: 1px solid var(--border);
+}
+
+.availability__block--available {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #4ade80;
+}
+
+.availability__block--booked {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
+.availability__block--time-off {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.availability__block--off {
+  background: rgba(148, 163, 184, 0.08);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #cbd5e1;
+}
+
+.therapist__name {
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.alert {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #e0f2fe;
+}
+
+.pill,
+.chip,
+button {
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+
+.pill:hover,
+.chip:hover,
+button:hover {
+  transform: translateY(-1px);
+}
+
+/* --- Time-grid schedule (multi-clinic) --- */
+
+.schedulerControls {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.schedulerControls__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.schedulerControls__cta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.schedule__header {
+  display: grid;
+  grid-template-columns: 110px repeat(auto-fit, minmax(240px, 1fr));
+  border-bottom: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.schedule__corner {
+  padding: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.schedule__dayHeader {
+  padding: 12px;
+  font-weight: 600;
+  border-left: 1px solid var(--border);
+}
+
+.schedule__body {
+  display: grid;
+  grid-template-columns: 110px repeat(auto-fit, minmax(240px, 1fr));
+  height: 560px;
+  overflow: auto;
+}
+
+.schedule__gutter {
+  position: relative;
+  background: rgba(255, 255, 255, 0.01);
+  border-right: 1px solid var(--border);
+}
+
+.schedule__timeMark {
+  position: absolute;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.schedule__day {
+  position: relative;
+  border-left: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.schedule__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.schedule__empty {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  padding: 10px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.schedule__appt {
+  position: absolute;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 8px 10px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.schedule__appt--conflict {
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.schedule__appt--locked {
+  border-color: rgba(245, 158, 11, 0.55);
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.schedule__appt[draggable='true'] {
+  cursor: grab;
+}
+
+.schedule__appt[draggable='true']:active {
+  cursor: grabbing;
+}
+
+.schedule__day--resource {
+  user-select: none;
+}
+
+.schedulerOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.schedulerOverlay--off {
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.schedulerOverlay--away {
+  background: rgba(239, 68, 68, 0.08);
+  border-top: 1px solid rgba(239, 68, 68, 0.25);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.schedulerOverlay--locked {
+  background: rgba(245, 158, 11, 0.08);
+  border-top: 1px solid rgba(245, 158, 11, 0.25);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.schedule__apptTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.schedule__apptTime {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.schedule__apptTitle {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.schedule__apptSub {
+  margin-top: 2px;
+}
+
+.schedule__apptFooter {
+  margin-top: 6px;
+}
+
+.schedule__clinicDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+/* --- Reassignment list (keeps actions usable) --- */
+
+.scheduleList {
+  margin-top: 14px;
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.scheduleList__header {
+  margin-bottom: 10px;
+}
+
+.scheduleList__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.scheduleList__row {
+  display: grid;
+  grid-template-columns: 1fr auto 260px;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 860px) {
+  .scheduleList__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scheduleList__row--conflict {
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.scheduleList__row--locked {
+  border-color: rgba(245, 158, 11, 0.55);
+  background: rgba(245, 158, 11, 0.04);
+}
+
+.scheduleList__row--cancelled {
+  opacity: 0.7;
+}
+
+.scheduleList__title {
+  font-weight: 600;
+}
+
+.scheduleList__select {
+  padding: 8px 10px;
+}
+
+/* --- Therapist availability timeline --- */
+
+.availabilityPicker {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+@media (min-width: 720px) {
+  .availabilityPicker {
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: end;
+  }
+}
+
+.availabilityPicker__meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.availabilityPicker__clinic {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.availabilityTimeline {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.availabilityTimeline__header {
+  display: grid;
+  grid-template-columns: 110px repeat(auto-fit, minmax(220px, 1fr));
+  border-bottom: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.availabilityTimeline__body {
+  display: grid;
+  grid-template-columns: 110px repeat(auto-fit, minmax(220px, 1fr));
+  height: 520px;
+  overflow: auto;
+}
+
+.availabilityTimeline__day {
+  position: relative;
+  border-left: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.availabilityTimeline__segment {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.availabilityTimeline__segment--available {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.availabilityTimeline__segment--booked {
+  background: rgba(59, 130, 246, 0.10);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.availabilityTimeline__segment--time-off {
+  background: rgba(239, 68, 68, 0.10);
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+.availabilityTimeline__segment--off {
+  background: rgba(148, 163, 184, 0.05);
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+.availabilityTimeline__segmentLabel {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+}
+
+.availabilityAppts {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.availabilityAppts__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.availabilityAppts__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.availabilityAppts__title {
+  font-weight: 600;
+}
+
+/* --- Slide-out filter drawer --- */
+
+.drawerOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: flex-end;
+  padding: 18px;
+  z-index: 50;
+}
+
+.drawer {
+  width: min(520px, 100%);
+  height: 100%;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.drawer__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.drawer__body {
+  padding: 16px;
+  overflow: auto;
+}
