@@ -2,23 +2,25 @@
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #e2e8f0;
-  background-color: #0b1221;
+  color: var(--text);
+  background-color: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --bg: #0b1221;
-  --panel: #0f172a;
-  --border: #1e293b;
-  --muted: #94a3b8;
-  --accent: #38bdf8;
-  --accent-2: #f97316;
+  --bg: #f5f9fc;
+  --panel: #ffffff;
+  --panel-2: #eef6fb;
+  --text: #0f172a;
+  --border: #d7e3ee;
+  --muted: #5b6b7c;
+  --accent: #0ea5e9;
+  --accent-2: #14b8a6;
   --success: #22c55e;
   --warn: #f59e0b;
   --error: #ef4444;
-  --card: rgba(255, 255, 255, 0.03);
-  --focus: rgba(56, 189, 248, 0.55);
+  --card: rgba(15, 23, 42, 0.03);
+  --focus: rgba(14, 165, 233, 0.35);
 }
 
 * {
@@ -28,10 +30,10 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08), transparent 35%),
-    radial-gradient(circle at 80% 0%, rgba(249, 115, 22, 0.07), transparent 25%),
+  background: radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.14), transparent 38%),
+    radial-gradient(circle at 85% 0%, rgba(20, 184, 166, 0.12), transparent 30%),
     var(--bg);
-  color: #e2e8f0;
+  color: var(--text);
 }
 
 :focus-visible {
