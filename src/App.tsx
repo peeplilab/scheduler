@@ -7,7 +7,7 @@ import { FilterBar } from './components/FilterBar'
 import { clinics, therapists, timeAway } from './mockData'
 import { createLocalSchedulerApi } from './api/localSchedulerApi'
 import { useSchedulerPolling } from './hooks/useSchedulerPolling'
-import { detectConflicts, buildRange, formatDateInput, isTherapistAvailable, withinDateRange } from './utils/schedule'
+import { addDays, detectConflicts, buildRange, formatDateInput, isTherapistAvailable, withinDateRange } from './utils/schedule'
 import type { Appointment, StaffRole } from './types'
 
 type ViewMode = 'day' | 'week'
@@ -17,8 +17,8 @@ function App() {
   const [selectedClinics, setSelectedClinics] = useState<string[]>(clinics.map((clinic) => clinic.id))
   const [roleFilter, setRoleFilter] = useState<StaffRole | 'all'>('all')
   const [viewMode, setViewMode] = useState<ViewMode>('week')
-  const [dateStart, setDateStart] = useState(() => formatDateInput(new Date('2025-01-13')))
-  const [dateEnd, setDateEnd] = useState(() => formatDateInput(new Date('2025-01-19')))
+  const [dateStart, setDateStart] = useState(() => formatDateInput(new Date()))
+  const [dateEnd, setDateEnd] = useState(() => formatDateInput(addDays(new Date(), 6)))
   const [feedback, setFeedback] = useState<string>('')
   const [selectedTherapistId, setSelectedTherapistId] = useState<string>(() => therapists[0]?.id ?? '')
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false)
