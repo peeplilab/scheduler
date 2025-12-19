@@ -6,7 +6,12 @@ const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 export const parseISO = (value: string) => new Date(value)
 
-export const formatDateInput = (date: Date) => date.toISOString().split('T')[0]
+export const formatDateInput = (date: Date) => {
+  const yyyy = date.getFullYear()
+  const mm = String(date.getMonth() + 1).padStart(2, '0')
+  const dd = String(date.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
 
 export const addDays = (date: Date, days: number) => new Date(date.getTime() + days * MS_PER_DAY)
 

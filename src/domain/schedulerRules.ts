@@ -1,4 +1,5 @@
 import type { Appointment, SlotLock, Therapist, TimeAway } from '../types'
+import { formatDateInput } from '../utils/schedule'
 import { addMinutes, minutesDiff, overlaps, parseISO, snapMinutes } from '../utils/schedule'
 
 type AvailabilityContext = {
@@ -75,7 +76,7 @@ export const withinTherapistWorkingHours = (therapist: Therapist, start: Date, e
 }
 
 export const hasTimeAwayConflict = (therapistId: string, start: Date, end: Date, away: TimeAway[]) => {
-  const day = start.toISOString().split('T')[0]
+  const day = formatDateInput(start)
   return away.some((slot) => {
     if (slot.therapistId !== therapistId) return false
     if (slot.date !== day) return false

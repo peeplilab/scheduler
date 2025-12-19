@@ -1,5 +1,5 @@
 import type { Appointment, Clinic, Therapist, TimeAway } from '../types'
-import { formatDay, formatTime, overlaps, parseISO } from '../utils/schedule'
+import { formatDay, formatTime, overlaps, parseISO, formatDateInput } from '../utils/schedule'
 
 type AvailabilityStatus = 'available' | 'booked' | 'time-off' | 'off'
 
@@ -211,7 +211,7 @@ export function AvailabilityGrid({
             </div>
 
             {dates.map((d) => {
-              const dateISO = d.toISOString().split('T')[0]
+              const dateISO = formatDateInput(d)
               const segments = buildSegments(
                 selected,
                 dateISO,
