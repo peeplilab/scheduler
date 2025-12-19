@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Calendar as BigCalendar, dateFnsLocalizer, type SlotInfo } from 'react-big-calendar'
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
@@ -153,6 +153,10 @@ export function CalendarView({
 
   const selectedDay = dates[0]
   const selectedDayISO = selectedDay ? formatDateInput(selectedDay) : formatDateInput(new Date())
+
+  useEffect(() => {
+    setCreateDate(selectedDayISO)
+  }, [selectedDayISO])
 
   const calendarAnchorDate = selectedDay ?? new Date()
   const calendarMin = useMemo(() => {
