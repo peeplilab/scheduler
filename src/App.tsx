@@ -14,7 +14,6 @@ type ViewMode = 'day' | 'week'
 
 function App() {
   const api = useMemo(() => createLocalSchedulerApi(), [])
-  const clientId = api.getClientId()
   const [selectedClinics, setSelectedClinics] = useState<string[]>(clinics.map((clinic) => clinic.id))
   const [roleFilter, setRoleFilter] = useState<StaffRole | 'all'>('all')
   const [viewMode, setViewMode] = useState<ViewMode>('week')
@@ -24,9 +23,8 @@ function App() {
   const [selectedTherapistId, setSelectedTherapistId] = useState<string>(() => therapists[0]?.id ?? '')
   const [filtersOpen, setFiltersOpen] = useState<boolean>(false)
 
-  const { snapshot, loading, error, refresh } = useSchedulerPolling({ api, rangeStart: dateStart, rangeEnd: dateEnd })
+  const { snapshot, error, refresh } = useSchedulerPolling({ api, rangeStart: dateStart, rangeEnd: dateEnd })
   const appointments: Appointment[] = snapshot?.appointments ?? []
-  const locks = snapshot?.locks ?? []
 
   const filteredAppointments = useMemo(() => {
     const clinicFiltered = appointments.filter((appt) => selectedClinics.includes(appt.clinicId))
@@ -128,20 +126,19 @@ function App() {
       <header className="hero">
         <div className="topbar">
           <div>
-            <p className="eyebrow">Scheduling cockpit</p>
+            <p className="eyebrow">Scheduler</p>
             <h1>Multi-clinic scheduling + therapist availability</h1>
             <p className="muted small">{filterSummary}</p>
           </div>
           <div className="topbar__actions">
-            <button className="chip chip--active" type="button" onClick={() => setFiltersOpen(true)}>
+            <button className="chip chip--active" type="button" onClick={() => setFiltersOpen(true)} title="Filter by clinic, role, date range, and view">
               Filters
             </button>
           </div>
         </div>
-        {(feedback || error || loading) && (
+        {(feedback || error) && (
           <div className="alert">
-            {loading ? 'Refreshing appointments…' : ''}
-            {error ? ` ${error}` : ''}
+            {error ? `${error}` : ''}
             {feedback ? ` ${feedback}` : ''}
           </div>
         )}
@@ -191,8 +188,6 @@ function App() {
           therapists={therapists}
           clinics={clinics}
           conflicts={conflicts}
-          locks={locks}
-          clientId={clientId}
           viewMode={viewMode}
           timeAway={timeAway}
           onReassign={handleReassign}

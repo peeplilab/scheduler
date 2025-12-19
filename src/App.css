@@ -845,3 +845,44 @@ button:hover {
   padding: 16px;
   overflow: auto;
 }
+
+/* --- React Big Calendar light styling --- */
+
+.rbc-time-view,
+.rbc-month-view,
+.rbc-agenda-view {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+.rbc-time-header,
+.rbc-time-content,
+.rbc-header,
+.rbc-timeslot-group,
+.rbc-time-slot {
+  border-color: var(--border);
+}
+
+.rbc-header {
+  padding: 8px 6px;
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.rbc-label {
+  color: var(--muted);
+}
+
+.rbc-today {
+  background: rgba(14, 165, 233, 0.08);
+}
+
+.rbc-current-time-indicator {
+  background-color: var(--accent);
+}
+
+.rbc-event,
+.rbc-day-slot .rbc-background-event {
+  border-radius: 10px;
+}

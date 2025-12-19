@@ -61,17 +61,9 @@ const writeState = (next: StoredSchedulerState) => {
 }
 
 const buildLocks = (appointments: Appointment[], clientId: string): SlotLock[] => {
-  return appointments
-    .filter((a) => !a.cancelledAt)
-    .filter((a) => a.createdBy !== clientId)
-    .map((a) => ({
-      id: `lock_${a.id}`,
-      therapistId: a.therapistId,
-      start: a.start,
-      end: a.end,
-      lockedBy: a.createdBy,
-      reason: 'booked',
-    }))
+  void appointments
+  void clientId
+  return []
 }
 
 const findAppointmentOrThrow = (appointments: Appointment[], id: string) => {
@@ -80,8 +72,7 @@ const findAppointmentOrThrow = (appointments: Appointment[], id: string) => {
   return appt
 }
 
-const assertOwnedOrThrow = (appt: Appointment, clientId: string) => {
-  if (appt.createdBy !== clientId) throw new Error('Appointment is locked by another user')
+const assertMutableOrThrow = (appt: Appointment) => {
   if (appt.cancelledAt) throw new Error('Appointment is cancelled')
 }
 
@@ -152,7 +143,7 @@ export const createLocalSchedulerApi = (): SchedulerApi => {
   const rescheduleAppointment = async (id: string, start: string, end: string): Promise<Appointment> => {
     const state = readState()
     const current = findAppointmentOrThrow(state.appointments, id)
-    assertOwnedOrThrow(current, clientId)
+    assertMutableOrThrow(current)
 
     const at = nowIso()
     const nextAppt: Appointment = {
@@ -186,7 +177,7 @@ export const createLocalSchedulerApi = (): SchedulerApi => {
   const reassignAppointment = async (id: string, therapistId: string): Promise<Appointment> => {
     const state = readState()
     const current = findAppointmentOrThrow(state.appointments, id)
-    assertOwnedOrThrow(current, clientId)
+    assertMutableOrThrow(current)
 
     const at = nowIso()
     const nextAppt: Appointment = {
@@ -218,7 +209,7 @@ export const createLocalSchedulerApi = (): SchedulerApi => {
   const updateAppointmentStatus = async (id: string, status: Appointment['status']): Promise<Appointment> => {
     const state = readState()
     const current = findAppointmentOrThrow(state.appointments, id)
-    assertOwnedOrThrow(current, clientId)
+    assertMutableOrThrow(current)
 
     const at = nowIso()
     const event: AppointmentAuditEvent = {
@@ -248,7 +239,7 @@ export const createLocalSchedulerApi = (): SchedulerApi => {
   const cancelAppointment = async (id: string): Promise<Appointment> => {
     const state = readState()
     const current = findAppointmentOrThrow(state.appointments, id)
-    assertOwnedOrThrow(current, clientId)
+    assertMutableOrThrow(current)
 
     const at = nowIso()
     const nextAppt: Appointment = {

@@ -9,11 +9,10 @@ import type { CreateAppointmentInput } from '../api/schedulerApi'
 import {
   canScheduleWindow,
   getAppointmentDurationMinutes,
-  isLockedAppointment,
   nextAllowedStatuses,
   snapDateToSlot,
 } from '../domain/schedulerRules'
-import type { Appointment, Clinic, SlotLock, Therapist, TimeAway } from '../types'
+import type { Appointment, Clinic, Therapist, TimeAway } from '../types'
 import { addMinutes, formatDateInput, formatTime, parseISO } from '../utils/schedule'
 
 type ViewMode = 'day' | 'week'
@@ -33,7 +32,7 @@ type BackgroundEvent = {
   start: Date
   end: Date
   resourceId?: string
-  kind: 'lock' | 'away'
+  kind: 'away'
 }
 
 const locales = { 'en-US': enUS }
@@ -53,8 +52,6 @@ type CalendarProps = {
   therapists: Therapist[]
   clinics: Clinic[]
   conflicts: Set<string>
-  locks: SlotLock[]
-  clientId: string
   viewMode: ViewMode
   timeAway: TimeAway[]
 
@@ -73,8 +70,6 @@ export function CalendarView({
   therapists,
   clinics,
   conflicts,
-  locks,
-  clientId,
   viewMode,
   timeAway,
   onReassign,
@@ -84,7 +79,7 @@ export function CalendarView({
   onCancel,
   onUpdateStatus,
 }: CalendarProps) {
-  const [slotMinutes, setSlotMinutes] = useState<15 | 30>(30)
+  const slotMinutes = 15
   const [query, setQuery] = useState('')
 
   const [createPatient, setCreatePatient] = useState('')
@@ -140,7 +135,7 @@ export function CalendarView({
     const duration = Math.max(slotMinutes, Math.round(createDurationMinutes / slotMinutes) * slotMinutes)
     const end = addMinutes(start, duration)
 
-    const validation = canScheduleWindow(therapist.id, start, end, appointments, locks, { therapists, timeAway })
+    const validation = canScheduleWindow(therapist.id, start, end, appointments, [], { therapists, timeAway })
     if (!validation.ok) return
 
     onCreate({
@@ -187,17 +182,6 @@ export function CalendarView({
   const backgroundEvents = useMemo<BackgroundEvent[]>(() => {
     if (viewMode !== 'day') return []
 
-    const lockEvents = locks
-      .filter((l) => l.start.startsWith(selectedDayISO))
-      .map((l) => ({
-        id: `lock_${l.id}`,
-        title: 'Locked',
-        start: parseISO(l.start),
-        end: parseISO(l.end),
-        resourceId: l.therapistId,
-        kind: 'lock' as const,
-      }))
-
     const awayEvents = timeAway
       .filter((a) => a.date === selectedDayISO)
       .map((a) => ({
@@ -209,8 +193,8 @@ export function CalendarView({
         kind: 'away' as const,
       }))
 
-    return [...awayEvents, ...lockEvents]
-  }, [locks, selectedDayISO, timeAway, viewMode])
+    return awayEvents
+  }, [selectedDayISO, timeAway, viewMode])
 
   const handleSelectSlot = (slotInfo: SlotInfo) => {
     const resourceId = (slotInfo as unknown as { resourceId?: unknown }).resourceId
@@ -222,7 +206,6 @@ export function CalendarView({
     const { event, start, resourceId } = args
     const appt = event.appointment
     if (appt.cancelledAt) return
-    if (isLockedAppointment(appt, clientId)) return
     if (resourceId && String(resourceId) !== appt.therapistId) return
 
     const snappedStart = snapDateToSlot(start, slotMinutes, 'round')
@@ -234,7 +217,7 @@ export function CalendarView({
       snappedStart,
       nextEnd,
       appointments,
-      locks,
+      [],
       { therapists, timeAway },
       appt.id,
     )
@@ -250,18 +233,7 @@ export function CalendarView({
       <div className="panel__header">
         <div>
           <p className="eyebrow">Multi-clinic schedule</p>
-          <p className="muted">Create, search, reschedule, cancel · Polling lock awareness</p>
-        </div>
-        <div className="segmented">
-          <select
-            value={slotMinutes}
-            onChange={(e) => setSlotMinutes(Number(e.target.value) as 15 | 30)}
-            className="input"
-            aria-label="Slot duration"
-          >
-            <option value={15}>15 minute slots</option>
-            <option value={30}>30 minute slots</option>
-          </select>
+          <p className="muted">Create, search, reschedule, cancel</p>
         </div>
       </div>
 
@@ -274,11 +246,18 @@ export function CalendarView({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Patient, therapist, type, status…"
+              title="Search across patient, therapist, type, and status"
             />
           </div>
           <div>
             <label className="label">Patient</label>
-            <input className="input" value={createPatient} onChange={(e) => setCreatePatient(e.target.value)} />
+            <input
+              className="input"
+              value={createPatient}
+              onChange={(e) => setCreatePatient(e.target.value)}
+              placeholder="Search existing patient or type a new one…"
+              title="Start typing a patient name (existing or new)"
+            />
           </div>
           <div>
             <label className="label">Type</label>
@@ -327,15 +306,17 @@ export function CalendarView({
           </div>
 
           <div className="schedulerControls__cta">
-            <button type="button" className="chip chip--active" onClick={handleCreate}>
+            <button type="button" className="chip chip--active" onClick={handleCreate} title="Creates an appointment and snaps it to 15-minute slots">
               Create
             </button>
-            <div className="muted small">Tip: click a day/resource column to preset start time.</div>
+            <div className="muted small" title="You can also drag-and-drop existing appointments to reschedule">
+              Tip: click a day/resource column to preset start time.
+            </div>
           </div>
         </div>
       </div>
 
-      <div style={{ height: 560 }}>
+      <div style={{ height: 560 }} title="Drag and drop appointments to reschedule (snaps to 15-minute slots)">
         <DragAndDropCalendar
           localizer={localizer}
           date={calendarAnchorDate}
@@ -346,7 +327,7 @@ export function CalendarView({
           selectable
           onSelectSlot={handleSelectSlot}
           onEventDrop={handleEventDrop as unknown as (args: unknown) => void}
-          draggableAccessor={(event: CalendarEvent) => !event.appointment.cancelledAt && !isLockedAppointment(event.appointment, clientId)}
+          draggableAccessor={(event: CalendarEvent) => !event.appointment.cancelledAt}
           resizable={false}
           step={slotMinutes}
           timeslots={60 / slotMinutes}
@@ -357,12 +338,11 @@ export function CalendarView({
           resourceTitleAccessor={(t: Therapist) => `${t.name} · ${t.role}`}
           eventPropGetter={(event: CalendarEvent) => {
             const appt = event.appointment
-            const locked = isLockedAppointment(appt, clientId)
             const conflict = conflicts.has(appt.id)
             const clinicColor = getClinicColor(appt)
 
             return {
-              className: conflict ? 'schedule__appt--conflict' : locked ? 'schedule__appt--locked' : '',
+              className: conflict ? 'schedule__appt--conflict' : '',
               style: {
                 borderLeft: clinicColor ? `4px solid ${clinicColor}` : undefined,
               },
@@ -380,7 +360,7 @@ export function CalendarView({
       <div className="scheduleList">
         <div className="scheduleList__header">
           <p className="eyebrow">Reassignments</p>
-          <p className="muted small">Searchable list with lifecycle + cancellation + locking</p>
+          <p className="muted small">Searchable list with lifecycle + cancellation</p>
         </div>
 
         {!listView.length ? (
@@ -396,7 +376,6 @@ export function CalendarView({
               }))
 
               const isConflict = conflicts.has(appt.id)
-              const locked = isLockedAppointment(appt, clientId)
               const cancelled = Boolean(appt.cancelledAt)
 
               const lastAudit = appt.audit[appt.audit.length - 1]
@@ -406,7 +385,7 @@ export function CalendarView({
               const allowedStatusesUnique = Array.from(new Set(allowedStatuses))
 
               return (
-                <div key={appt.id} className={cancelled ? 'scheduleList__row scheduleList__row--cancelled' : isConflict ? 'scheduleList__row scheduleList__row--conflict' : locked ? 'scheduleList__row scheduleList__row--locked' : 'scheduleList__row'}>
+                <div key={appt.id} className={cancelled ? 'scheduleList__row scheduleList__row--cancelled' : isConflict ? 'scheduleList__row scheduleList__row--conflict' : 'scheduleList__row'}>
                   <div className="scheduleList__who">
                     <div className="scheduleList__title">{appt.patient}</div>
                     <div className="muted small">{formatTime(appt.start)}-{formatTime(appt.end)} · {clinic.name} · {therapist.name} ({therapist.role})</div>
@@ -416,25 +395,37 @@ export function CalendarView({
                     <span className={`badge badge--${appt.type}`}>{appt.type === 'evaluation' ? 'Evaluation' : 'Follow-up'}</span>
                     <span className={`badge badge--status badge--status-${appt.status}`}>{appt.status}</span>
                     {cancelled && <span className="badge badge--cancelled">Cancelled</span>}
-                    {locked && <span className="badge badge--locked">Locked</span>}
                     {isConflict && <span className="badge badge--conflict">Conflict</span>}
                   </div>
                   <div className="scheduleList__action">
-                    <select value={appt.status} onChange={(e) => onUpdateStatus(appt.id, e.target.value as Appointment['status'])} className="input scheduleList__select" disabled={locked || cancelled} aria-label="Appointment status">
+                    <select
+                      value={appt.status}
+                      onChange={(e) => onUpdateStatus(appt.id, e.target.value as Appointment['status'])}
+                      className="input scheduleList__select"
+                      disabled={cancelled}
+                      aria-label="Appointment status"
+                      title="Status transitions are constrained to the allowed lifecycle"
+                    >
                       {allowedStatusesUnique.map((s) => (
                         <option key={s} value={s}>
                           {s}
                         </option>
                       ))}
                     </select>
-                    <select value={appt.therapistId} onChange={(e) => onReassign(appt.id, e.target.value)} className="input scheduleList__select" disabled={locked || cancelled}>
+                    <select
+                      value={appt.therapistId}
+                      onChange={(e) => onReassign(appt.id, e.target.value)}
+                      className="input scheduleList__select"
+                      disabled={cancelled}
+                      title="Reassign to a different resource (disabled options are unavailable)"
+                    >
                       {options.map(({ candidate, available }) => (
                         <option key={candidate.id} value={candidate.id} disabled={!available}>
                           {candidate.name} · {candidate.role} ({clinicLookup[candidate.clinicId].name}){!available ? ' - unavailable' : ''}
                         </option>
                       ))}
                     </select>
-                    <button type="button" className="chip" onClick={() => onCancel(appt.id)} disabled={locked || cancelled}>Cancel</button>
+                    <button type="button" className="chip" onClick={() => onCancel(appt.id)} disabled={cancelled} title="Cancels the appointment (cannot be undone)">Cancel</button>
                   </div>
                 </div>
               )
